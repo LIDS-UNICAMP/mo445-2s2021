@@ -62,6 +62,12 @@ def save_features(out_channels, output_dir):
         innerdir = os.path.join(output_dir, blockname)
         os.mkdir(innerdir)
 
+        #saving mimage
+        try:
+            utils.save_mimage(innerdir + ".mimg", feats.transpose(1,2,0) )
+        except Exception as e:
+            print('An exception occurred when saving mimage: {}'.format(e))
+
         nfeats = feats.shape[0]
         for i in range(nfeats):
             tmp = feats[i,:,:]
