@@ -10,7 +10,7 @@ Firstly, download the [FLIM](https://github.com/LIDS-UNICAMP/FLIM/tree/mo445) pr
   cd <git_dir>
   git clone git@github.com:LIDS-UNICAMP/FLIM.git
   cd FLIM
-  git checkout 
+  git checkout mo445
   pip install -r requirements.txt
   pip install .
 ```
