@@ -59,7 +59,7 @@ Para instalar os requisitos próprios desse projeto faça:
 ```
 
 
-3. Executar em C programa da libmo445 para segmentar uma imagem a partir dos marcadores e gerando uma máscara. Cada máscara deve ser nomeada como '''<original_img>_label.png'''.
+3. Executar em C programa da [libmo445](libmo445.tar.bz2) para segmentar uma imagem a partir dos marcadores e gerando uma máscara. Cada máscara deve ser nomeada como '''<original_img>_label.png'''.
 
 
 4. A partir das segmentações geradas com o passo 3, treinar um modelo de rede neural com o script [train_flim_unet.py](src/train_flim_unet.py), por exemplo:
