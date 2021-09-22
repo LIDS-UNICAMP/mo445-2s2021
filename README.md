@@ -1,57 +1,52 @@
-# Tarefa MO445
+# MO445 Scripts
 
-# Requisitos
+# Requirements
 
-## FLIM
+## FLIM requirements
 
-Primeiro baixe o repositório do [FLIM](https://github.com/LIDS-UNICAMP/FLIM/tree/mo445) na branch mo445 e installe o pacote:
-
+Firstly, download the [FLIM](https://github.com/LIDS-UNICAMP/FLIM/tree/mo445) project at the *mo445* branch. For example:
 
 ```
   cd <git_dir>
-```
-
-caso use ssh faça:
-```
   git clone git@github.com:LIDS-UNICAMP/FLIM.git
   cd FLIM
+  git checkout 
   pip install -r requirements.txt
   pip install .
 ```
 
-com o pacote do FLIM é possível utilizar a ferramenta de anotação com
+
+Once instaled,FLIM project provides an annotation tool for drawing markers at any specified image:
 
 ```
     annotation <image_path>
 ```
 
-## Requisitos próprios
+## This project requirements
 
-Para instalar os requisitos próprios desse projeto faça:
-
-
+To install this project requirements do:
 ```
     cd <tarefa_mo445>
     pip install -r requirements.txt
 ```
 
 
-# Fluxo de utilização
+# How to use
 
 
-1. Obter marcadores com a ferramenta de anotação, como por exemplo
+1. Create the markers with the annotation tool, for example:
 
 ```
     annotation imgs_and_markers/9.png
 ```
 
-2. Treinar o encoder a partir das imagens com marcadores
+2. Train the FLIM encoder for all images and markers in the provided folder, for example:
 
 ```
     python src/train_encoder.py -a arch-unet.json -i imgs_and_markers/ -o encoder.pt
 ```
 
-2.5. As ativações dos encoders podem ser visualizadas com o script [extract_features.py](src/extract_features.py), esse script irá extrair todas as features na pasta especificada:
+2.5. The [extract_features.py](src/extract_features.py) extract features for an given pair of model-image. This will save all features in a specified folder, the features will be saved in .png and .mimg. **Note that the script will erase the output features folder to reduce disk space consumption and to not mix up features from different images. That said, use different output folders for different input images.**
 
 ```
     python src/extract_features.py -a arch-unet.json -i imgs_and_markers/9.png -o features/ -m encoder.pt
@@ -59,18 +54,18 @@ Para instalar os requisitos próprios desse projeto faça:
 ```
 
 
-3. Executar em C programa da [libmo445](libmo445.tar.bz2) para segmentar uma imagem a partir dos marcadores e gerando uma máscara. Cada máscara deve ser nomeada como '''<original_img>_label.png'''.
+3. Execute and C program from [libmo445](libmo445.tar.bz2) that uses the markers created in the first step. This program should create an segmentation mask for each image in the '''<original_img>_label.png''' format.
 
 
-4. A partir das segmentações geradas com o passo 3, treinar um modelo de rede neural com o script [train_flim_unet.py](src/train_flim_unet.py), por exemplo:
-
+4. Using the segmentation mask of the previous step, train a deep learning model with the [train_flim_unet.py](src/train_flim_unet.py)script, for example:  
 ```
     python src/train_flim_unet.py -a arch-unet.json -id imgs_and_markers/ -gd gts/ -ne 3
 ```
 
-***Obs.: Assegure que toda imagem _label.png tenha sua imagem original*** 
+***Note: The [train_flim_unet.py](src/train_flim_unet.py) scripts expect that every _label.png image has an equivalent original image***
 
-5. O script [eval_unet](src/eval_unet.py) avalia o modelo treinado no passo anterior, verificando a acurácia e gerando a máscara na pasta de saída passada como argumento:
+5. The script [eval_unet](src/eval_unet.py) evaluates the model trained in the previous step, showing the intersection over unit (IoU) from input set. The *-output* argument is optional and if provided will be used to save the all masks predicted by the flim_unet model.
+
 
 ```
     python src/eval_unet.py -a arch-unet.json -id imgs_and_markers/ -gd gts/ -o output/

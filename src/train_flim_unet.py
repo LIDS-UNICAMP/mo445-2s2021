@@ -52,7 +52,7 @@ def main(arch_path, encoder_model, images_datapath, gt_datapath, output_model, n
         tmp_iou  = 0
         for bx, data in enumerate(trn_dl):
             loss, acc, iou = train_batch(model, (data['img'], data['gt']), optimizer, criterion, device=device)
-            log.record(ex+(bx+1)/N, trn_loss=loss, trn_acc=acc, end='\r')
+            log.record(ex+(bx+1)/N, trn_loss=loss, trn_acc=acc, iou=iou, end='\r')
             tmp_loss += loss
             tmp_iou  += iou
             
@@ -72,11 +72,9 @@ def main(arch_path, encoder_model, images_datapath, gt_datapath, output_model, n
             }, output_model)
 
 
-    return log_trn_loss, log_trn_iou
-
 
 
     
 
 if __name__ == '__main__':
-    _ = main()
+    main()
