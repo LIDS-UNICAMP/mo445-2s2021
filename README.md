@@ -65,7 +65,7 @@ Para instalar os requisitos próprios desse projeto faça:
 4. A partir das segmentações geradas com o passo 3, treinar um modelo de rede neural com o script [train_flim_unet.py](src/train_flim_unet.py), por exemplo:
 
 ```
-    python src/train_flim_unet.py -a arch-unet.json -id imgs_and_markers/ -gd gts/
+    python src/train_flim_unet.py -a arch-unet.json -id imgs_and_markers/ -gd gts/ -ne 3
 ```
 
 ***Obs.: Assegure que toda imagem _label.png tenha sua imagem original*** 

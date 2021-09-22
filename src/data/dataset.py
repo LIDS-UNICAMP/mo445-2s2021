@@ -47,7 +47,10 @@ class SegmDataset(Dataset):
 
         if(self._transform):
             image = self._transform(image)
-        sample = (image, label_image.astype(np.int64))
+        sample = {'img'  : image,
+                  'gt'   : label_image.astype(np.int64),
+                  'name' : gts_name}
+                
         
         return sample 
 

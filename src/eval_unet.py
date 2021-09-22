@@ -66,7 +66,7 @@ def main(arch_path, images_datapath, gt_datapath, unet_model, output_dir):
     tmp_loss = 0
     tmp_iou  = 0
     for bx, data in enumerate(val_dl):
-        loss, acc, preds, true_labels, iou = validate_batch(model, data, criterion, device=device)
+        loss, acc, preds, true_labels, iou = validate_batch(model, (data['img'], data['gt']), criterion, device=device)
 
         if all_preds is None:
             all_preds = preds.detach().cpu().numpy().flatten()
@@ -79,7 +79,7 @@ def main(arch_path, images_datapath, gt_datapath, unet_model, output_dir):
 
         if output_dir is not None:
             tmp_img = preds.detach().cpu().squeeze(0).numpy()
-            save_features(tmp_img*255, os.path.join(output_dir,'out.png'))
+            save_features(tmp_img*255, os.path.join(output_dir, data['name'][0] + '.png'))
         
     log_val_loss.append(tmp_loss/(bx+1))
     log_val_iou.append(tmp_iou/(bx+1))

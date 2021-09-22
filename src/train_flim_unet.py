@@ -51,7 +51,7 @@ def main(arch_path, encoder_model, images_datapath, gt_datapath, output_model, n
         tmp_loss = 0
         tmp_iou  = 0
         for bx, data in enumerate(trn_dl):
-            loss, acc, iou = train_batch(model, data, optimizer, criterion, device=device)
+            loss, acc, iou = train_batch(model, (data['img'], data['gt']), optimizer, criterion, device=device)
             log.record(ex+(bx+1)/N, trn_loss=loss, trn_acc=acc, end='\r')
             tmp_loss += loss
             tmp_iou  += iou
