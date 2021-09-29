@@ -38,7 +38,7 @@ class SegmDataset(Dataset):
         label_image = self._load_label_image(label_path)
 
         if label_image.max() == 255:
-            label_image[label_image == 255] = 1
+            label_image[label_image >=1] = 1
         else:
             maxv = label_image.max()
             mask = label_image==maxv
