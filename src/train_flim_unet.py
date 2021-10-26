@@ -15,7 +15,8 @@ import click
 @click.option('--output_model', '-o', default='unet.pt', type=str, help='Output .pt encoder (default=unet.pt)')
 @click.option('--n_epochs', '-ne', default=20, type=int, help='Number of epochs')
 @click.option('--encoder_model', '-e', default='encoder.pt', type=str, help='Encoder .pt model')
-def main(arch_path, encoder_model, images_datapath, gt_datapath, output_model, n_epochs):
+@click.option('--train-encoder', '-tr', default=False, type=bool, help='Flag to train both the decoder and the encoder')
+def main(arch_path, encoder_model, images_datapath, gt_datapath, output_model, n_epochs, train_encoder):
 
     device = get_device()
     arch = utils.load_architecture(arch_path)
@@ -27,7 +28,7 @@ def main(arch_path, encoder_model, images_datapath, gt_datapath, output_model, n
 
 
     num_classes = 2
-    u_net = UNet(encoder=encoder, out_channels=num_classes)
+    u_net = UNet(encoder=encoder, out_channels=num_classes, train_encoder=train_encoder)
 
     model = u_net.to(device)
     criterion = UnetLoss

@@ -101,9 +101,10 @@ def _layers_before_downscale(model):
     return layer_names, last_out_channels
 
 class UNet(nn.Module):
-    def __init__(self, encoder, out_channels=2):
+    def __init__(self, encoder, out_channels=2, train_encoder=False):
         super().__init__()
 
+        self.train_encoder=train_encoder
         self.encoder = encoder
 
         encoder_block_names, block_out_channels = _layers_before_downscale(encoder)
@@ -129,9 +130,15 @@ class UNet(nn.Module):
         self.decoder.add_module("output_layer", nn.Conv2d(last_conv_out_channels, out_channels, kernel_size=1))
 
     def forward(self, x):
-        ## NOTE: comment this to train both the encoder and the decoder
-        self.encoder.eval()
-        with torch.no_grad():
+        if not self.train_encoder:
+            self.encoder.eval()
+            with torch.no_grad():
+                encoder_outputs = self._encoder_blocks(x)
+
+                block_names = reversed(encoder_outputs.keys())
+
+                bottleneck = encoder_outputs[next(block_names)]
+        else:
             encoder_outputs = self._encoder_blocks(x)
 
             block_names = reversed(encoder_outputs.keys())
@@ -176,7 +183,6 @@ def train_batch(model, data, optimizer, criterion, device='cpu'):
     _masks = model(ims)
     _masks = maybe_resize2d(_masks, ce_masks.shape)
     optimizer.zero_grad()
-    #print(f"ce_shape", ce_masks.shape, "uniques", torch.unique(ce_masks))
     loss, acc, iou = criterion(_masks, ce_masks)
     loss.backward()
     optimizer.step()
