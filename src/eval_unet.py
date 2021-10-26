@@ -3,20 +3,28 @@ from flim.experiments import utils
 from model.model import UNet, UnetLoss, get_device, validate_batch, IoU
 from data.dataset import SegmDataset, ToTensor
 from torchvision import transforms
+from scipy.ndimage.morphology import binary_erosion
 from torch import optim
 from torch_snippets import *
 import matplotlib.pyplot as plt
 import click
 import cv2
 import os
+from skimage.color import rgb2lab, lab2rgb
 
+def save_output(image, pred_img, base_name):
+    eroded = binary_erosion(pred_img, structure=np.ones([3,3])).astype(np.int64)
+    lines = pred_img-eroded
 
+    lined_image = image.squeeze(0).numpy()
 
-def save_features(image, image_name):
-    # print(type(image.dtype))
-    # im = Image.fromarray(image)
-    # im.save(image_name)
-    cv2.imwrite(image_name, image)
+    lined_image = lab2rgb(lined_image.transpose(1,2,0))
+    lined_image = cv2.cvtColor(lined_image, cv2.COLOR_RGB2BGR)*255
+
+    lined_image[:,:,1][lines==1] = 255
+
+    cv2.imwrite(base_name +'.png', pred_img*255)
+    cv2.imwrite(base_name + '_segm.png', lined_image)
 
 
 
@@ -79,7 +87,7 @@ def main(arch_path, images_datapath, gt_datapath, unet_model, output_dir):
 
         if output_dir is not None:
             tmp_img = preds.detach().cpu().squeeze(0).numpy()
-            save_features(tmp_img*255, os.path.join(output_dir, data['name'][0] + '.png'))
+            save_output (data['img'], tmp_img, os.path.join(output_dir, data['name'][0]))
         
     log_val_loss.append(tmp_loss/(bx+1))
     log_val_iou.append(tmp_iou/(bx+1))
