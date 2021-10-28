@@ -1,5 +1,5 @@
 from flim.experiments import utils
-from model.model import get_device, _layers_before_downscale
+from model.model import get_device, _layers_before_downscale, maybe_resize2d
 import torch
 import click
 import matplotlib.pyplot as plt
@@ -43,8 +43,7 @@ class IntermediateLayerGetter:
 
 
 
-def save_features(out_channels, output_dir):
-
+def save_features(out_channels, output_dir, imshape):
 
     if not os.path.isdir(output_dir):
             os.mkdir(output_dir)
@@ -61,6 +60,7 @@ def save_features(out_channels, output_dir):
 
         innerdir = os.path.join(output_dir, blockname)
         os.mkdir(innerdir)
+        feats = maybe_resize2d(feats, imshape).squeeze(0).numpy()
 
         #saving mimage
         try:
@@ -103,7 +103,7 @@ def forward_encoder(encoder, x):
         else:
             outname = listname[0]
 
-        tmp = {"block": outname, "out": block_output.detach().cpu().squeeze(0).numpy()}
+        tmp = {"block": outname, "out": block_output.detach().cpu()}
         ret.append(tmp)
 
     return ret
@@ -134,7 +134,7 @@ def main(arch_path, model, input_image, output_dir):
     
     out_channels = forward_encoder(encoder, image)
     
-    save_features(out_channels, output_dir)
+    save_features(out_channels, output_dir, image.shape)
 
     print(f"Done. All images saved to {output_dir}")
 
