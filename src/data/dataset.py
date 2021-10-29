@@ -71,18 +71,17 @@ class SegmDataset(Dataset):
             self._gt_names=[]
             for name in os.listdir(self._gts_dir):
                 if name.endswith('_label.png'):
-                    self._gt_names.append(name.split('_label')[0])
+                    prefix = name.split('_label')[0]
+                    if prefix in self._image_names:
+                        self._gt_names.append(name.split('_label')[0])
                 else:
                     continue
             self._gt_names.sort()
         else:
             raise ValueError(f"{self._gts_dir} does not exists")
 
-        isok=True
-        for el in self._gt_names:
-            if not (el in self._gt_names):
-                isok=False
-                raise ValueError(f"Missing {el} from images")
+        if len(self._gt_names) == 0:
+            raise ValueError(f"Dataset has no valid labels, ensure that each <i>.png has a  <i>_label.png")
         
 
     def __len__(self):

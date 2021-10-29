@@ -12,19 +12,20 @@ import cv2
 import os
 from skimage.color import rgb2lab, lab2rgb
 
-def save_output(image, pred_img, base_name):
+def save_output(image, pred_img, output_dir, base_name, inputpath):
+
+    if not os.path.isdir(output_dir):
+        os.mkdir(output_dir)
+        
     eroded = binary_erosion(pred_img, structure=np.ones([3,3])).astype(np.int64)
     lines = pred_img-eroded
 
-    lined_image = image.squeeze(0).numpy()
-
-    lined_image = lab2rgb(lined_image.transpose(1,2,0))
-    lined_image = cv2.cvtColor(lined_image, cv2.COLOR_RGB2BGR)*255
-
+    lined_image  = cv2.imread(os.path.join(inputpath, base_name+".png"))
+    
     lined_image[:,:,1][lines==1] = 255
 
-    cv2.imwrite(base_name +'.png', pred_img*255)
-    cv2.imwrite(base_name + '_segm.png', lined_image)
+    cv2.imwrite(os.path.join(output_dir, base_name +'.png'), pred_img*255)
+    cv2.imwrite(os.path.join(output_dir, base_name + '_segm.png'), lined_image)
 
 
 
@@ -87,8 +88,8 @@ def main(arch_path, images_datapath, gt_datapath, unet_model, output_dir):
 
         if output_dir is not None:
             tmp_img = preds.detach().cpu().squeeze(0).numpy()
-            save_output (data['img'], tmp_img, os.path.join(output_dir, data['name'][0]))
-        
+            save_output (data['img'], tmp_img, output_dir, data['name'][0], images_datapath)
+            
     log_val_loss.append(tmp_loss/(bx+1))
     log_val_iou.append(tmp_iou/(bx+1))
 
