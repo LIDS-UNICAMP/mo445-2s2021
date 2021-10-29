@@ -8,21 +8,20 @@
                     "m_norm": {
                         "operation": "marker_based_norm",
                         "params": {
-                            "kernel_size": 3,
+                            "kernel_size": 5,
                             "dilation": 1
                         }
                     },
                     "conv": {
                         "operation": "conv2d",
                         "params": {
-                            "kernel_size": 3,
+                            "kernel_size": 5,
                             "stride": 1,
                             "padding": 1,
                             "dilation": 1,
-                            "out_channels": 16
+                            "out_channels": 32
                         }
                     },
-        
                     "activation": {
                         "operation": "relu",
                         "params": {
@@ -32,21 +31,20 @@
                     "m_norm2": {
                         "operation": "marker_based_norm",
                         "params": {
-                            "kernel_size": 3,
+                            "kernel_size": 5,
                             "dilation": 1
                         }
                     },
                     "conv2": {
                         "operation": "conv2d",
                         "params": {
-                            "kernel_size": 3,
+                            "kernel_size": 5,
                             "stride": 1,
                             "padding": 1,
                             "dilation": 1,
-                            "out_channels": 16
+                            "out_channels": 32
                         }
                     },
-        
                     "activation2": {
                         "operation": "relu",
                         "params": {
@@ -61,7 +59,7 @@
                     "pool": {
                         "operation": "max_pool2d",
                         "params": {
-                            "kernel_size": 2,
+                            "kernel_size": 3,
                             "stride": 2,
                             "padding": 0
                         }
