@@ -55,7 +55,7 @@ def save_output(image, pred_img, output_dir, base_name, inputpath):
     if not os.path.isdir(output_dir):
         os.mkdir(output_dir)
         
-    eroded = binary_erosion(pred_img, structure=np.ones([3,3])).astype(np.int64)
+    eroded = binary_erosion(pred_img, structure=np.ones([5,5])).astype(np.int64)
     lines = pred_img-eroded
 
     lined_image  = cv2.imread(os.path.join(inputpath, base_name+".png"))

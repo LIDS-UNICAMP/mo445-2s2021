@@ -3,4 +3,4 @@ if [ "$#" -ne 1 ]; then
   exit 1
 fi
 
-python src/train_flim_unet.py -a arch-unet.json -id imgs_and_markers/ -gd labels/ -ne $1
+python src/train_flim_unet.py -a arch-unet.json -id imgs_and_markers/ -tr False -gd labels/ -ne $1
