@@ -44,7 +44,6 @@ def complete_img_tensor(image, area=2000):
         except Exception:
             traceback.print_exc()
 
-        print("close image")
         out_img = torch.tensor(out_img).unsqueeze(0)
 
     return out_img
