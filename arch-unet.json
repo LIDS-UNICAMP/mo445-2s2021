@@ -19,7 +19,8 @@
                             "stride": 1,
                             "padding": 1,
                             "dilation": 1,
-                            "out_channels": 16
+                            "out_channels": 16,
+                            "nkernels_per_image": 1000
                         }
                     },
                     "activation": {
@@ -42,7 +43,8 @@
                             "stride": 1,
                             "padding": 1,
                             "dilation": 1,
-                            "out_channels": 32
+                            "out_channels": 32,
+                            "nkernels_per_image": 1000
                         }
                     },
                     "activation2": {
@@ -78,7 +80,8 @@
                             "stride": 1,
                             "padding": 1,
                             "dilation": 1,
-                            "out_channels": 64
+                            "out_channels": 64,
+                            "nkernels_per_image": 1000
                         }
                     },
         
@@ -115,7 +118,8 @@
                             "stride": 1,
                             "padding": 1,
                             "dilation": 1,
-                            "out_channels": 128
+                            "out_channels": 128,
+                            "nkernels_per_image": 1000
                         }
                     },        
                     "activation": {
